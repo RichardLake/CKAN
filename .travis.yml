@@ -1,5 +1,9 @@
 language: csharp
 
+
+env:
+  - EnableNuGetPackageRestore=true
+
 # These commands simulate having a graphical display, which is needed
 # for our GUI tests.
 before_install:
