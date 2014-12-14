@@ -16,6 +16,7 @@ namespace CKAN
         /// and other decorations as filled in by our build system.
         /// Eg: v1.3.5-12-g055d7c3 (unstable) or "development (unstable)"
         /// </summary>
+        
         public static string Version()
         {
             string version = BuildVersion();

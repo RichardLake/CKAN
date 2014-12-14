@@ -17,6 +17,12 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManyConsole">
+      <HintPath>..\packages\ManyConsole.0.4.2.17\lib\ManyConsole.dll</HintPath>
+    </Reference>
+    <Reference Include="NDesk.Options">
+      <HintPath>..\packages\NDesk.Options.0.2.1\lib\NDesk.Options.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="log4net">
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
@@ -28,18 +34,33 @@
       <HintPath>..\packages\CommandLineParser.1.9.71\lib\net40\CommandLine.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\Available.cs" />
+    <Compile Include="Command\CommandBase.cs" />
+    <Compile Include="Command\Install.cs" />
+    <Compile Include="Command\List.cs" />
+    <Compile Include="Command\Clean.cs" />
+    <Compile Include="Command\GUI.cs" />
+    <Compile Include="Command\CommandHolder.cs" />
+    <Compile Include="Command\KSP\Add.cs" />
+    <Compile Include="Command\KSP\Default.cs" />
+    <Compile Include="Command\KSP\Forget.cs" />
+    <Compile Include="Command\KSP\List.cs" />
+    <Compile Include="Command\KSP\Rename.cs" />
+    <Compile Include="Command\ManagerCommand.cs" />
+    <Compile Include="Command\Remove.cs" />
+    <Compile Include="Command\Repair\Registry.cs" />
+    <Compile Include="Command\Scan.cs" />
+    <Compile Include="Command\Show.cs" />
+    <Compile Include="Command\Update.cs" />
+    <Compile Include="Command\Upgrade.cs" />
+    <Compile Include="Command\Version.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="Options.cs" />
-    <Compile Include="Action\KSP.cs" />
     <Compile Include="Exit.cs" />
     <Compile Include="ProgressReporter.cs" />
-    <Compile Include="Action\Repair.cs" />
-    <Compile Include="Action\ISubCommand.cs" />
-    <Compile Include="Action\Upgrade.cs" />
-    <Compile Include="Action\ICommand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -48,9 +69,11 @@
       <Name>CKAN</Name>
     </ProjectReference>
     <ProjectReference Include="..\GUI\CKAN-GUI.csproj">
-      <Project>{A79F9D54-315C-472B-928F-713A5860B2BE}</Project>
+      <Project>{a79f9d54-315c-472b-928f-713a5860b2be}</Project>
       <Name>CKAN-GUI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
