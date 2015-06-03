@@ -38,6 +38,7 @@ notifications:
   irc:
     channels: 
       - "irc.esper.net#ckan-ci"
+      - "irc.esper.net#ckan"
     template: 
       - "%{repository_name}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
       - "Change view : %{compare_url}"
