@@ -35,13 +35,14 @@ mono:
   - "3.10.0"
   - "3.2.8"
 notifications: 
-  channels: 
-    - "irc.esper.net#ckan-ci"
-  irc: ~
-  template: 
-    - "%{repository_name}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
-    - "Change view : %{compare_url}"
-    - "Build details : %{build_url}"
+  irc:
+    channels: 
+      - "irc.esper.net#ckan-ci"
+    template: 
+      - "%{repository_name}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}"
+      - "Change view : %{compare_url}"
+      - "Build details : %{build_url}"
+    use_notice: true
 script: 
   - bin/build
   - "nunit-console --exclude=FlakyNetwork build/Tests/bin/Debug/CKAN.Tests.dll"
