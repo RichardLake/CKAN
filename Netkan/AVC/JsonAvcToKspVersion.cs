@@ -6,7 +6,7 @@ using log4net;
 namespace CKAN.NetKAN
 {
     /// <summary>
-    /// Converts AVC style KSP versions into CKAN ones.
+    /// Converts AVC style KSP versions into CKAN one.
     /// </summary>
     public class JsonAvcToKspVersion : JsonConverter
     {
