@@ -9,12 +9,12 @@ check_nunit () {
     # Extract the CLR version of nunit-console.
     NUNIT_TEXT=$($1 -help)
     NUNIT_VERSION=$(echo "$NUNIT_TEXT" | awk '$1 ~ /CLR/ {print substr($3,1,1)}')
-    
+
     if [ $NUNIT_VERSION -eq 4 ]
     then
         NUNIT_BINARY=$1
     fi
-    
+
     echo "Found $1 with CLR version $NUNIT_VERSION."
 }
 
