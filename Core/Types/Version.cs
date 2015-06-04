@@ -10,7 +10,8 @@ namespace CKAN {
 
     [Serializable]
     [JsonConverter(typeof(JsonSimpleStringConverter))]
-    public class Version : IComparable<Version> {
+    public class Version : IComparable<Version>,IEquatable<Version>
+    {
         private readonly int epoch;
         private readonly string version;
         private readonly string orig_string;
@@ -73,12 +74,12 @@ namespace CKAN {
         /// Returns +1 if this is greater than that
         /// Returns  0 if equal.
         /// </summary>
-        public int CompareTo(Version that) {            
+        public int CompareTo(Version that) {
 
             if (that.epoch == epoch && that.version == version) {
                 return 0;
             }
- 
+
             // Compare epochs first.
             if (epoch != that.epoch) {
                 return epoch > that.epoch ?1:-1;
@@ -132,25 +133,11 @@ namespace CKAN {
             }
             cache.Add(tuple, 1);
             return 1;
-
-        }
-
-        public bool IsEqualTo(Version that) {
-            return CompareTo (that) == 0;
-        }
-
-        public bool IsLessThan(Version that) {
-            return CompareTo (that) < 0;
-        }
-
-        public bool IsGreaterThan(Version that) {
-            return CompareTo (that) > 0;
         }
 
         /// <summary>
         /// Compare the leading non-numerical parts of two strings
         /// </summary>
-       
         internal static Comparison StringComp(string v1, string v2)
         {
             var comp = new Comparison {remainder1 = "", remainder2 = ""};
@@ -240,19 +227,34 @@ namespace CKAN {
             return comp;
         }
 
-        public override bool Equals(object obj)
-        {
-            var other = obj as Version;
-            return other != null ? IsEqualTo(other) : base.Equals(obj);
-        }
         public override int GetHashCode()
         {
             return version.GetHashCode();
         }
-        int IComparable<Version>.CompareTo(Version other)
+
+        public static int CompareTo(Version a, Version b)
         {
-            return CompareTo(other);
+            if ((object)a == null)
+                return ((object)b == null) ? 0 : -1;
+            if ((object)b == null)
+                return 1;
+            return a.CompareTo(b);
         }
+        public bool Equals(Version x){ return version.Equals(x.version);}
+        public static bool operator <(Version x, Version y) { return CompareTo(x, y) < 0; }
+        public static bool operator >(Version x, Version y) { return CompareTo(x, y) > 0; }
+        public static bool operator <=(Version x, Version y) { return CompareTo(x, y) <= 0; }
+        public static bool operator >=(Version x, Version y) { return CompareTo(x, y) >= 0; }
+        public static bool operator ==(Version x, Version y) { return CompareTo(x, y) == 0; }
+        public static bool operator !=(Version x, Version y) { return CompareTo(x, y) != 0; }
+        public override bool Equals(object obj)
+        {
+            return (obj is Version) && Equals((Version) obj);
+        }
+
+        public bool IsGreaterThan(Version other){return this > other;}
+        public bool IsLessThan(Version other) { return this < other; }
+        public bool IsEqualTo(Version other) { return this == other; }
     }
 
     /// <summary>
@@ -265,7 +267,7 @@ namespace CKAN {
         }
 
         override public string ToString()
-        {            
+        {
             return AutodetectedDllString;
         }
     }

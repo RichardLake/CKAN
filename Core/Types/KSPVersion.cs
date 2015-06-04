@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace CKAN
 {
     [JsonConverter(typeof (JsonSimpleStringConverter))]
-    public class KSPVersion : IComparable<KSPVersion>
+    public class KSPVersion : IComparable<KSPVersion>,IEquatable<KSPVersion>
     {
         private readonly string version;
         private Version cached_version_object;
@@ -130,8 +130,11 @@ namespace CKAN
         private static readonly Dictionary<Tuple<KSPVersion, KSPVersion>, int> CompareCache
             = new Dictionary<Tuple<KSPVersion, KSPVersion>, int>();
 
+
         public int CompareTo(KSPVersion that)
         {
+            if ((object)that == null)
+                return 1;
             int ret;
             var tuple = new Tuple<KSPVersion, KSPVersion>(this, that);
             if (CompareCache.TryGetValue(tuple, out ret))
@@ -172,7 +175,7 @@ namespace CKAN
             }
             else if (IsLongVersion())
             {
-                return CompareTo(that) == 0;
+                return IsEqualTo(that);
             }
 
             // We've got a short version, so split it into two separate versions,
@@ -205,52 +208,44 @@ namespace CKAN
             throw new BadKSPVersionException(version);
         }
 
-        // Why don't I get operator overloads for free?
-        // Is there a class I can delcare allegiance to that gives me this?
-        // Where's my ComparableOperators role?
-
-        public static bool operator <(KSPVersion v1, KSPVersion v2)
-        {
-            return v1.CompareTo(v2) < 0;
-        }
-
-        public static bool operator <=(KSPVersion v1, KSPVersion v2)
-        {
-            return v1.CompareTo(v2) <= 0;
-        }
-
-        public static bool operator >(KSPVersion v1, KSPVersion v2)
-        {
-            return v1.CompareTo(v2) > 0;
-        }
-
-        public static bool operator >=(KSPVersion v1, KSPVersion v2)
-        {
-            return v1.CompareTo(v2) >= 0;
-        }
-
-        public override string ToString()
+        public override string ToString ()
         {
             return Version();
-        }
-
-        protected bool Equals(KSPVersion other)
-        {
-            return string.Equals(version, other.version);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((KSPVersion) obj);
         }
 
         public override int GetHashCode()
         {
             return (version != null ? version.GetHashCode() : 0);
         }
+
+        public static int CompareTo(KSPVersion a, KSPVersion b)
+        {
+            if((object) a == null)
+                return ((object)b == null) ? 0 : -1;
+            if ((object) b == null)
+                return 1;
+            return a.CompareTo(b);
+        }
+
+        public bool Equals(KSPVersion x)
+        {
+            if ((object) x == null) return false;
+            return version.Equals(x.version);
+        }
+        public static bool operator <(KSPVersion x, KSPVersion y) { return CompareTo(x, y) < 0; }
+        public static bool operator >(KSPVersion x, KSPVersion y) { return CompareTo(x, y) > 0; }
+        public static bool operator <=(KSPVersion x, KSPVersion y) { return CompareTo(x, y) <= 0; }
+        public static bool operator >=(KSPVersion x, KSPVersion y) { return CompareTo(x, y) >= 0; }
+        public static bool operator ==(KSPVersion x, KSPVersion y) { return CompareTo(x, y) == 0; }
+        public static bool operator !=(KSPVersion x, KSPVersion y) { return CompareTo(x, y) != 0; }
+        public override bool Equals(object obj)
+        {
+            return (obj is KSPVersion) && Equals((KSPVersion)obj);
+        }
+
+        public bool IsGreaterThan(KSPVersion other) { return this > other; }
+        public bool IsLessThan(KSPVersion other) { return this < other; }
+        public bool IsEqualTo(KSPVersion other) { return this == other; }
     }
 
     public class BadKSPVersionException : Exception
