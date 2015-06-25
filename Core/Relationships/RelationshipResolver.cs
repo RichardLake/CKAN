@@ -154,6 +154,12 @@ namespace CKAN
             return opts;
         }
 
+        internal void AddModulesToInstall(IEnumerable<string> identifiers)
+        {
+            var list = identifiers.Select(identifier => registry.LatestAvailable(identifier, kspversion)).ToList();
+            AddModulesToInstall(list);
+        }
+
         /// <summary>
         /// Add modules to consideration of the relationship resolver. Optional installed parameter defaults
         /// to installed mods and is intended to be used when this is incorrect, such as when some are to be
@@ -227,6 +233,19 @@ namespace CKAN
                 installed_modules.Remove(module);
                 conflicts.RemoveAll(kvp => kvp.Key.Equals(module) || kvp.Value.Equals(module));
             }
+        }
+
+        /// <summary>
+        /// Helper method for <see cref="RemoveModsFromInstalledList(IEnumerable{Module})"/>
+        /// </summary>
+        public void RemoveModsFromInstalledList(IEnumerable<string> identifiers)
+        {
+            //TODO Should pass actual module instead of strings. Leave the conversion in the UI
+            var as_module =
+            registry.InstalledModules.Where(mod =>
+                identifiers.Contains(mod.identifier, StringComparer.OrdinalIgnoreCase))
+                .Select(m=>m.Module);
+            RemoveModsFromInstalledList(as_module);
         }
 
         /// <summary>

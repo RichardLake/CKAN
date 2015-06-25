@@ -834,16 +834,28 @@ namespace CKAN
         /// </summary>
         public void Upgrade(IEnumerable<string> identifiers, NetAsyncDownloader netAsyncDownloader)
         {
+            //TODO Should pass actual module instead of strings. Leave the conversion in the UI
             var options = new RelationshipResolverOptions();
 
             // We do not wish to pull in any suggested or recommended mods.
             options.with_recommends = false;
             options.with_suggests = false;
+            options.procede_with_inconsistencies = true;
 
-            var resolver = new RelationshipResolver(identifiers.ToList(), options, registry_manager.registry, ksp.Version());
-            List<CkanModule> upgrades = resolver.ModList();
+            var resolver = new RelationshipResolver(options, registry_manager.registry, ksp.Version());
+            resolver.RemoveModsFromInstalledList(identifiers);
+            resolver.AddModulesToInstall(identifiers);
 
-            Upgrade(upgrades, netAsyncDownloader);
+            if (resolver.IsConsistent)
+            {
+                List<CkanModule> upgrades = resolver.ModList();
+                Upgrade(upgrades, netAsyncDownloader);
+            }
+            else
+            {
+                throw new InconsistentKraken(resolver.ConflictList
+                    .Select(conflict=>string.Format("{0} conflicts with {1}",conflict.Key.identifier,conflict.Value)).ToList());
+            }
         }
 
         /// <summary>
