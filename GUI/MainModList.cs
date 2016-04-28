@@ -185,8 +185,8 @@ namespace CKAN
                 mainModList.full_list_of_mod_rows.Values.Select(row => row.Tag as GUIMod).ToList());
 
             //TODO Consider using smart enum patten so stuff like this is easier
-            FilterToolButton.DropDownItems[0].Text = String.Format("Compatible ({0})",
-                mainModList.CountModsByFilter(GUIModFilter.Compatible));
+            FilterToolButton.DropDownItems[0].Text = String.Format("Available ({0})",
+                mainModList.CountModsByFilter(GUIModFilter.Available));
             FilterToolButton.DropDownItems[1].Text = String.Format("Installed ({0})",
                 mainModList.CountModsByFilter(GUIModFilter.Installed));
             FilterToolButton.DropDownItems[2].Text = String.Format("Upgradeable ({0})",
@@ -343,7 +343,7 @@ namespace CKAN
             }
         }
 
-        private GUIModFilter _modFilter = GUIModFilter.Compatible;
+        private GUIModFilter _modFilter = GUIModFilter.Available;
         private string _modNameFilter = String.Empty;
         private string _modAuthorFilter = String.Empty;
         private string _modDescriptionFilter = String.Empty;
@@ -465,7 +465,7 @@ namespace CKAN
         {
             switch (filter)
             {
-                case GUIModFilter.Compatible:
+                case GUIModFilter.Available:
                     return Modules.Count(m => !m.IsIncompatible);
                 case GUIModFilter.Installed:
                     return Modules.Count(m => m.IsInstalled);
@@ -578,7 +578,7 @@ namespace CKAN
         {
             switch (ModFilter)
             {
-                case GUIModFilter.Compatible:
+                case GUIModFilter.Available:
                     return !m.IsIncompatible;
                 case GUIModFilter.Installed:
                     return m.IsInstalled;

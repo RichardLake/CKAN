@@ -355,13 +355,13 @@ namespace CKAN
             this.FilterToolButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.FilterToolButton.Name = "FilterToolButton";
             this.FilterToolButton.Size = new System.Drawing.Size(150, 36);
-            this.FilterToolButton.Text = "Filter (Compatible)";
+            this.FilterToolButton.Text = "Filter (Available)";
             // 
             // FilterCompatibleButton
             // 
             this.FilterCompatibleButton.Name = "FilterCompatibleButton";
             this.FilterCompatibleButton.Size = new System.Drawing.Size(215, 22);
-            this.FilterCompatibleButton.Text = "Compatible";
+            this.FilterCompatibleButton.Text = "Available";
             this.FilterCompatibleButton.Click += new System.EventHandler(this.FilterCompatibleButton_Click);
             // 
             // FilterInstalledButton

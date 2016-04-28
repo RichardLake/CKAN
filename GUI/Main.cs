@@ -18,7 +18,7 @@ namespace CKAN
 {
     public enum GUIModFilter
     {
-        Compatible = 0,
+        Available = 0,
         Installed = 1,
         InstalledUpdateAvailable = 2,
         NewInRepository = 3,
@@ -729,7 +729,7 @@ namespace CKAN
 
         private void FilterCompatibleButton_Click(object sender, EventArgs e)
         {
-            Filter(GUIModFilter.Compatible);
+            Filter(GUIModFilter.Available);
         }
 
         private void FilterInstalledButton_Click(object sender, EventArgs e)
@@ -786,7 +786,7 @@ namespace CKAN
             else if (filter == GUIModFilter.NotInstalled)
                 FilterToolButton.Text = "Filter (Not installed)";
             else
-                FilterToolButton.Text = "Filter (Compatible)";
+                FilterToolButton.Text = "Filter (Available)";
         }
 
         private void ContentsDownloadButton_Click(object sender, EventArgs e)
