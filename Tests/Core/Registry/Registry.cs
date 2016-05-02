@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Transactions;
 using CKAN;
 using NUnit.Framework;
@@ -87,6 +91,24 @@ namespace Tests.Core.Registry
             {
                 registry.LatestAvailable("ToTheMun", v0_24_2);
             });
+        }
+
+        [Test]
+        public void CompatibleShowsModulesWithUnmeetDependencies()
+        {
+            var gen = new RandomModuleGenerator(new Random());
+            var module_for_old_version = gen.GeneratorRandomModule(ksp_version:v0_24_2);
+            var module_for_newer_version = gen.GeneratorRandomModule(v0_25_0, depends:new List<RelationshipDescriptor>
+            {
+                new RelationshipDescriptor
+                {
+                    name = module_for_old_version.name
+                }
+            });
+            registry.AddAvailable(module_for_old_version);
+            registry.AddAvailable(module_for_newer_version);
+            Assert.That(registry.Available(v0_25_0),Is.Empty);
+            Assert.That(registry.Compatible(v0_25_0),Is.Not.Empty);
         }
 
         [Test]

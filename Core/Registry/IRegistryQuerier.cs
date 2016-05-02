@@ -11,11 +11,20 @@ namespace CKAN
         IEnumerable<string> InstalledDlls { get; }
 
         /// <summary>
-        /// Returns a simple array of all latest available modules for
+        /// Returns a simple List of all latest available modules for
         /// the specified version of KSP.
         /// </summary>
         // TODO: This name is misleading. It's more a LatestAvailable's'
         List<CkanModule> Available(KSPVersion ksp_version);
+
+        /// <summary>
+        /// Returns a simple List of all latest modules cambatible with
+        /// the specified version of KSP.
+        /// </summary>
+        /// <param name="ksp_version"></param>
+        /// <returns></returns>
+        List<CkanModule> Compatible(KSPVersion ksp_version);
+
 
         /// <summary>
         ///     Returns the latest available version of a module that

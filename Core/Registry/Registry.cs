@@ -404,57 +404,63 @@ namespace CKAN
         /// </summary>
         public List<CkanModule> Available(KSPVersion ksp_version)
         {
-            var candidates = new List<string>(available_modules.Keys);
             var compatible = new List<CkanModule>();
 
-            // It's nice to see things in alphabetical order, so sort our keys first.
-            candidates.Sort();
+            var candidates = Compatible(ksp_version);
 
             //Cache
             CkanModule[] modules_for_current_version = available_modules.Values.Select(pair => pair.Latest(ksp_version)).Where(mod => mod != null).ToArray();
             // Now find what we can give our user.
-            foreach (string candidate in candidates)
+            foreach (var candidate in candidates)
             {
-                CkanModule available = LatestAvailable(candidate, ksp_version);
+                // we need to check that we can get everything we depend on
+                bool failedDepedency = false;
 
-                if (available != null)
+                if (candidate.depends != null)
                 {
-                    // we need to check that we can get everything we depend on
-                    bool failedDepedency = false;
-
-                    if (available.depends != null)
+                    foreach (RelationshipDescriptor dependency in candidate.depends)
                     {
-                        foreach (RelationshipDescriptor dependency in available.depends)
+                        try
                         {
-                            try
-                            {
-                                if (!LatestAvailableWithProvides(dependency.name, ksp_version, modules_for_current_version).Any())
-                                {
-                                    failedDepedency = true;
-                                    break;
-                                }
-                            }
-                            catch (KeyNotFoundException e)
-                            {
-                                log.ErrorFormat("Cannot find available version with provides for {0} in registry", dependency.name);
-                                throw e;
-                            }
-                            catch (ModuleNotFoundKraken)
+                            if (!LatestAvailableWithProvides(dependency.name, ksp_version, modules_for_current_version).Any())
                             {
                                 failedDepedency = true;
                                 break;
                             }
                         }
+                        catch (KeyNotFoundException e)
+                        {
+                            log.ErrorFormat("Cannot find available version with provides for {0} in registry", dependency.name);
+                            throw e;
+                        }
+                        catch (ModuleNotFoundKraken)
+                        {
+                            failedDepedency = true;
+                            break;
+                        }
                     }
+                }
 
-                    if (!failedDepedency)
-                    {
-                        compatible.Add(available);
-                    }
+                if (!failedDepedency)
+                {
+                    compatible.Add(candidate);
                 }
             }
 
             return compatible;
+        }
+
+        /// <summary>
+        /// <see cref="IRegistryQuerier.Compatible"/>
+        /// </summary>
+        public List<CkanModule> Compatible(KSPVersion ksp_version) {
+            var candidates = new List<string>(available_modules.Keys);
+
+            // It's nice to see things in alphabetical order, so sort our keys first.
+            candidates.Sort();
+
+            // Now find what we can give our user.
+            return candidates.Select(candidate => LatestAvailable(candidate, ksp_version)).Where(available => available != null).ToList();
         }
 
         /// <summary>
