@@ -110,8 +110,12 @@ namespace CKAN
                 {
                     try
                     {
+                        //Ideally get the newest version compatible with for the current ksp version.
+                        // Else get the newest version.
                         var dependencyModule = registry.LatestAvailable
-                            (dependency.name, manager.CurrentInstance.Version());
+                            (dependency.name, manager.CurrentInstance.Version()) ?? registry.LatestAvailable(dependency.name,null);
+                        
+
                         UpdateModDependencyGraphRecursively(node, dependencyModule, relationship, depth + 1);
                     }
                     catch (ModuleNotFoundKraken)
