@@ -18,6 +18,7 @@ namespace CKAN
         public bool HasUpdate { get; private set; }
         public bool IsIncompatible { get; private set; }
         public bool IsAutodetected { get; private set; }
+        public bool IsAvailable { get; set; }
         public string Authors { get; private set; }
         public string InstalledVersion { get; private set; }
         public string LatestVersion { get; private set; }

@@ -147,7 +147,7 @@ namespace CKAN
             KSPVersion version = CurrentInstance.Version();
             IRegistryQuerier registry = RegistryManager.Instance(CurrentInstance).registry;
             var gui_mods = new HashSet<GUIMod>(registry.Available(version)
-                .Select(m => new GUIMod(m, registry, version)));
+                .Select(m => new GUIMod(m, registry, version) {IsAvailable = true}));
             gui_mods.UnionWith(registry.Incompatible(version)
                 .Select(m => new GUIMod(m, registry, version)));
             var installed = registry.InstalledModules
@@ -466,7 +466,7 @@ namespace CKAN
             switch (filter)
             {
                 case GUIModFilter.Available:
-                    return Modules.Count(m => !m.IsIncompatible);
+                    return Modules.Count(m => m.IsAvailable);
                 case GUIModFilter.Installed:
                     return Modules.Count(m => m.IsInstalled);
                 case GUIModFilter.InstalledUpdateAvailable:
@@ -579,7 +579,7 @@ namespace CKAN
             switch (ModFilter)
             {
                 case GUIModFilter.Available:
-                    return !m.IsIncompatible;
+                    return m.IsAvailable;
                 case GUIModFilter.Installed:
                     return m.IsInstalled;
                 case GUIModFilter.InstalledUpdateAvailable:
